@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connection from "./config/db.js";
 import userRouter from "./routes/User.route.js";
+import projectRouter from "./routes/Project.route.js";
 dotenv.config();
 
 const app = express();
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
+app.use("/project", projectRouter);
 
 app.listen(process.env.PORT, async () => {
   try {
