@@ -30,8 +30,16 @@ function Sidebar({ projectName, loading }) {
       label: "Widget Configurations",
       href: `/widget/upload?projectId=${projectId}`,
     },
-    { id: "deployment", label: "Deployment" },
-    { id: "pricing", label: "Pricing" },
+    {
+      id: "deployment",
+      label: "Deployment",
+      href: `/deploy/upload?projectId=${projectId}`,
+    },
+    {
+      id: "pricing",
+      label: "Pricing",
+      href: `/pricing/upload?projectId=${projectId}`,
+    },
   ];
 
   const bottomTabs = [
