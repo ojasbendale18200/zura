@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios_create from "../utils/axios_instance";
 import Plus from "./svg/Plus";
 import { Dialog, Transition } from "@headlessui/react";
+import { useToast } from "@chakra-ui/react";
 
 function Hero2({ projectData, getProjects }) {
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [projectName, setprojectName] = useState("");
 
@@ -18,8 +20,14 @@ function Hero2({ projectData, getProjects }) {
       const res = await axios_create.post(`/project/create/${userData._id}`, {
         projectName,
       });
+      toast({
+        title: "Project Created.",
+        description: "We've created a Project for you.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       getProjects(userData._id);
-      console.log("add project response", res);
     } catch (error) {
       console.log(error);
     }

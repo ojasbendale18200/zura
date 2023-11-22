@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios_create from "../utils/axios_instance";
+import { useToast } from "@chakra-ui/react";
 
 function UserModal({ isOpen, onClose, onSave }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const toast = useToast();
 
   const handleSave = async () => {
     if (username && email) {
@@ -13,11 +15,16 @@ function UserModal({ isOpen, onClose, onSave }) {
           email,
         });
 
-        console.log("data", data.data.data);
-
         if (data.data.status === true) {
           onSave(data.data.data);
           onClose();
+          toast({
+            title: "Account created.",
+            description: "We've created your account for you.",
+            status: "success",
+            duration: 4000,
+            isClosable: true,
+          });
         }
       } catch (error) {
         console.log(error);

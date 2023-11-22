@@ -3,10 +3,12 @@ import axios_create from "../utils/axios_instance";
 import HeroImg from "./svg/HeroImg";
 import Plus from "./svg/Plus";
 import { Dialog, Transition } from "@headlessui/react";
+import { useToast } from "@chakra-ui/react";
 
 function HeroPage({ getProjects }) {
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
+  const toast = useToast();
 
   const [projectName, setprojectName] = useState("");
 
@@ -18,7 +20,13 @@ function HeroPage({ getProjects }) {
         projectName,
       });
       getProjects(userData._id);
-      console.log("add project response", res);
+      toast({
+        title: "Project Created.",
+        description: "We've created Project For You.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
       console.log(error);
     }
