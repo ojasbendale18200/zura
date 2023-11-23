@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Setting from "./svg/Setting";
 import Logo from "./svg/Logo";
 import Loader from "./svg/Loader";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 function Sidebar({ projectName, loading }) {
   const [activeTab, setActiveTab] = useState("projects");
@@ -10,13 +10,11 @@ function Sidebar({ projectName, loading }) {
   const projectId = searchParams.get("projectId");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const navigate = useNavigate();
 
-  const handleToggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab, href) => {
     setActiveTab(tab);
+    navigate(href);
   };
 
   const tabs = [
@@ -50,6 +48,8 @@ function Sidebar({ projectName, loading }) {
       href: `/profile/upload?projectId=${projectId}`,
     },
   ];
+
+
   return (
     <div className="bg-[#F3E8FF] rounded-2xl h-screen w-[20%]  p-4 fixed top-0 left-0 overflow-y-auto flex flex-col">
       {/* sidebar header */}
@@ -70,28 +70,26 @@ function Sidebar({ projectName, loading }) {
       {/* tab section */}
       <ul className="text-white flex-1">
         {tabs.map((tab, index) => (
-          <Link to={tab.href}>
-            <li
-              key={tab.id}
-              className={`flex items-center p-3 font-semibold text-[#49454F] text-xs rounded-full cursor-pointer ${
+          <li
+            key={tab.id}
+            className={`flex items-center p-3 font-semibold text-[#49454F] text-xs rounded-full cursor-pointer ${
+              activeTab === tab.id
+                ? "bg-[#7E22CE] text-[#FFFF] rounded-full"
+                : "hover:bg-[#CAC4D0]"
+            }`}
+            onClick={() => handleTabClick(tab.id, tab.href)}
+          >
+            <div
+              className={`rounded-full text-xs h-7 w-7 flex items-center justify-center mr-3 font-semibold ${
                 activeTab === tab.id
-                  ? "bg-[#7E22CE] text-[#FFFF] rounded-full"
-                  : "hover:bg-[#CAC4D0]"
+                  ? "bg-[#211935] text-[#FFFF]"
+                  : "bg-[#CAC4D0]"
               }`}
-              onClick={() => handleTabClick(tab.id)}
             >
-              <div
-                className={`rounded-full text-xs h-7 w-7 flex items-center justify-center mr-3 font-semibold ${
-                  activeTab === tab.id
-                    ? "bg-[#211935] text-[#FFFF]"
-                    : "bg-[#CAC4D0]"
-                }`}
-              >
-                {index + 1}
-              </div>
-              {tab.label}
-            </li>
-          </Link>
+              {index + 1}
+            </div>
+            {tab.label}
+          </li>
         ))}
         <hr className="border-t-2 border-[#CAC4D0] my-4" />
       </ul>

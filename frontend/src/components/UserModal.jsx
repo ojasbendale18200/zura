@@ -27,7 +27,13 @@ function UserModal({ isOpen, onClose, onSave }) {
           });
         }
       } catch (error) {
-        console.log(error);
+        toast({
+          title: `${error.message}`,
+          description: "error",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
       }
     }
   };

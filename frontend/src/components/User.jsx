@@ -2,22 +2,66 @@ import React, { useEffect, useState } from "react";
 import UserLogo from "./svg/UserLogo";
 import Logo from "./svg/Logo";
 import axios_create from "../utils/axios_instance";
+import { useToast } from "@chakra-ui/react";
 
 function User() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+  });
   const [loading, setLoading] = useState(false);
   let userId = JSON.parse(localStorage.getItem("userInfo"));
+  const toast = useToast();
 
   const getUser = async () => {
     try {
       setLoading(true);
       const res = await axios_create.get(`/user/${userId._id}`);
-      console.log("first", res);
+
       setLoading(false);
       setUser(res?.data?.data);
     } catch (error) {
       console.log(error);
       setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdate = async () => {
+    const data = {
+      username: user.username,
+      email: user.email,
+    };
+    try {
+      const res = await axios_create.patch(`/user/${userId._id}`, data);
+      if (res.status === 201) {
+        toast({
+          title: res.data.status,
+          description: "success",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "error",
+          description: "error",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+
+      getUser();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -47,7 +91,9 @@ function User() {
           <input
             className="rounded-lg border border-gray-300 bg-white p-4 w-[300px] h-[41px]"
             type="text"
+            name="username"
             value={user.username}
+            onChange={handleChange}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -58,9 +104,17 @@ function User() {
           <input
             className="rounded-lg border border-gray-300 bg-white p-4 w-[300px] h-[41px]"
             type="email"
+            name="email"
             value={user.email}
+            onChange={handleChange}
           />
         </div>
+        <button
+          onClick={handleUpdate}
+          className="w-[120px] h-[50px] text-white bg-purple-600 rounded-xl  text-center font-roboto text-base font-bold leading-8 tracking-tighter "
+        >
+          Update
+        </button>
       </div>
 
       <h1 className="text-purple-700 font-roboto text-5xl font-bold leading-normal mt-11">
